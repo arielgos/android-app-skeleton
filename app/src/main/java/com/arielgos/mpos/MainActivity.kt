@@ -2,7 +2,6 @@ package com.arielgos.mpos
 
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -10,11 +9,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.arielgos.mpos.db.DBHelper
+import com.arielgos.mpos.core.DbHelper
+import com.arielgos.mpos.core.Logger
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var dbHelper: DBHelper
+    private lateinit var dbHelper: DbHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,10 +26,7 @@ class MainActivity : AppCompatActivity() {
             insets
         }
         requestPermissions()
-        //startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
-
-
-        dbHelper = DBHelper(this@MainActivity)
+        dbHelper = DbHelper(this@MainActivity)
         val db = dbHelper.writableDatabase
     }
 
@@ -48,20 +45,20 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         } catch (e: PackageManager.NameNotFoundException) {
-            Log.e(TAG, "Error getting package info", e)
+            Logger.e("Error getting package info", e)
             return
         }
 
         if (permissionsToRequest.isNotEmpty()) {
             requestMultiplePermissionsLauncher.launch(permissionsToRequest.toTypedArray())
         } else {
-            Log.d(TAG, "All permissions already granted.")
+            Logger.d("All permissions already granted.")
         }
     }
 
     private val requestMultiplePermissionsLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         permissions.entries.forEach {
-            Log.d(TAG, "Permission: ${it.key}, Granted: ${it.value}")
+            Logger.d("Permission: ${it.key}, Granted: ${it.value}")
             if (!it.value) {
                 AlertDialog.Builder(this).setTitle("Permission Required").setMessage("Permission ${it.key} is mandatory for the app to function properly. Please grant the permission in settings.").setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }.setCancelable(false).show()
             }
