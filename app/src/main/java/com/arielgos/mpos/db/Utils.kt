@@ -13,22 +13,22 @@ fun <T> createTableQuery(model: Class<T>): String {
             return@forEach
         }
         var field = "`${declaredField.name}`"
-        if (declaredField.type == String::class.java) {
-            field = "${field} TEXT"
-        } else if (declaredField.type == Int::class.java || declaredField.type == Long::class.java) {
-            field = "${field} INTEGER"
-        } else if (declaredField.type == Boolean) {
-            field = "${field} INTEGER"
-        } else if (declaredField.type == Float::class.java || declaredField.type == Double::class.java) {
-            field = "${field} NUMERIC"
-        } else if (declaredField.type == Date::class.java) {
-            field = "${field} TEXT"
+        if (declaredField.type === String::class.java) {
+            field = "$field TEXT"
+        } else if (declaredField.type === Int::class.java || declaredField.type === Long::class.java) {
+            field = "$field INTEGER"
+        } else if (declaredField.type === Boolean::class.java) {
+            field = "$field INTEGER"
+        } else if (declaredField.type === Float::class.java || declaredField.type === Double::class.java) {
+            field = "$field NUMERIC"
+        } else if (declaredField.type === Date::class.java) {
+            field = "$field TEXT"
         }
         if (declaredField.isAnnotationPresent(Key::class.java)) {
-            field = "${field} PRIMARY KEY"
+            field = "$field PRIMARY KEY"
         }
         if (declaredField.isAnnotationPresent(Autoincrement::class.java)) {
-            field = "${field} AUTOINCREMENT"
+            field = "$field AUTOINCREMENT"
         }
         fields.add(field)
     }
