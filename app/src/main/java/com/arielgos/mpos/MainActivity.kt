@@ -1,5 +1,6 @@
 package com.arielgos.mpos
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -11,15 +12,18 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.arielgos.mpos.core.DbHelper
 import com.arielgos.mpos.core.Logger
+import com.arielgos.mpos.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
     private lateinit var dbHelper: DbHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.main_activity)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -28,6 +32,13 @@ class MainActivity : AppCompatActivity() {
         requestPermissions()
         dbHelper = DbHelper(this@MainActivity)
         val db = dbHelper.writableDatabase
+
+        binding.myTextView.apply {
+            setOnClickListener {
+                Logger.d("clicking")
+                startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
+            }
+        }
     }
 
     override fun onDestroy() {
