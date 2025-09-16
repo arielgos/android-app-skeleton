@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         requestPermissions()
         dbHelper = DbHelper(this@MainActivity)
         val db = dbHelper.writableDatabase
+        dbHelper.close()
 
         binding.myTextView.apply {
             setOnClickListener {
@@ -43,7 +44,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        dbHelper.close()
     }
 
     private fun requestPermissions() {
